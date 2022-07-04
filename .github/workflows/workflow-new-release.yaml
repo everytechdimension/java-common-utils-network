@@ -23,7 +23,7 @@ jobs:
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
       - name: Printing PWD
         shell: bash
-        run: ls -al -R
+        run:  pwd
       - name: Validate Folder Listing
         shell: bash
         run: ls -al -R
