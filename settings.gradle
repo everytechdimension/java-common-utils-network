@@ -19,4 +19,4 @@ buildscript {
 }
 
 rootProject.name = 'java-common-utils-network'
-include('lib')
+include('src')
