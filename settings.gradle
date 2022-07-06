@@ -7,16 +7,4 @@
  * in the user manual at https://docs.gradle.org/7.2/userguide/multi_project_builds.html
  */
 
-buildscript {
-    repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
-    dependencies {
-        classpath "gradle.plugin.net.nemerosa:versioning:2.14.0"
-    }
-}
-
-rootProject.name = 'java-common-utils-network'
-include('src')
+rootProject.name = 'common-utils-network'
