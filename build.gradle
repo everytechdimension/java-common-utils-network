@@ -9,7 +9,7 @@ repositories {
 
 
 group 'com.everytechdimension'
-version '1.0.11'
+version '1.0.12'
 sourceCompatibility = 1.8
 
 publishing {
@@ -20,6 +20,22 @@ publishing {
             credentials {
                 username = System.getenv("GITHUB_ACTOR")
                 password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            artifactId 'common-utils-network'
+            from(components.java)
+            // Behebt den Fehler mit den dynamischen Versionen von Spring Boot
+            // Fixes the error with dynamic versions when using Spring Boot
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
             }
         }
     }
