@@ -1,6 +1,27 @@
 plugins {
     id 'java'
+    id "net.nemerosa.versioning"
     id 'maven-publish'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Implementation-Title': 'common-utils-network',
+                'Implementation-Version': "1.0."+versioning.info.commit,
+                "Implementation-Vendor": System.properties['user.name'],
+                'Built-By'       : System.properties['user.name'],
+                'Build-Timestamp': new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()),
+                'Build-Revision' : versioning.info.commit,
+                'Created-By'     : "Gradle ${gradle.gradleVersion}",
+                'Main-Class'     : "com.everytechdimension.common.utils.network.Main",
+                'Build-Jdk'      : "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
+                'Build-OS'       : "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}",
+                'Class-Path'     : "json-20180813.jar"
+        )
+    }
+
+    archiveName "common-utils-network-1.0.${versioning.info.commit.substring(0, 6)}.jar"
 }
 
 repositories {
@@ -9,7 +30,7 @@ repositories {
 
 
 group 'com.everytechdimension'
-version '1.0.12'
+version '1.0.'+versioning.info.commit.substring(0, 6)
 sourceCompatibility = 1.8
 
 publishing {
@@ -42,6 +63,7 @@ publishing {
 }
 
 dependencies {
-    // This dependency is exported to consumers, that is to say found on their compile classpath.
-    implementation 'org.json:json:20220320'
+    implementation files(fileTree(dir: '../libs', include: [
+            "json-20180813.jar"
+    ]))
 }
