@@ -1,10 +1,15 @@
 package com.everytechdimension.common.utils.network;
 
-import com.everytechdimension.common.utils.network.exception.*;
+import com.everytechdimension.common.utils.network.exception.ApiException;
+import com.everytechdimension.common.utils.network.exception.ApiJsonException;
+import com.everytechdimension.common.utils.network.exception.ApiResponseException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLHandshakeException;
+import javax.net.ssl.SSLSession;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -52,7 +57,7 @@ public class RESTApi {
 
             throw new ApiResponseException("Error is thrown from Api Server", res.statusCode);
         } catch (JSONException e) {
-            throw new ApiJsonException("Api response is not json: " + e.getMessage(), res.response+"\n uri: "+ uri);
+            throw new ApiJsonException("Api response is not json: " + e.getMessage(), res.response + "\n uri: " + uri);
         }
     }
 
@@ -75,6 +80,14 @@ public class RESTApi {
                 connection.setDoOutput(true);
                 connection.setDoInput(true);
             }
+            if (connection instanceof HttpsURLConnection) {
+                ((HttpsURLConnection) connection).setHostnameVerifier(new HostnameVerifier() {
+                    @Override
+                    public boolean verify(String arg0, SSLSession arg1) {
+                        return true;
+                    }
+                });
+            }
             connection.setRequestMethod(method.name());
             for (Map.Entry<String, String> p : headers.entrySet())
                 connection.setRequestProperty(p.getKey(), p.getValue());
@@ -90,7 +103,7 @@ public class RESTApi {
             InputStream inputStream = success ? connection.getInputStream() : connection.getErrorStream();
 
             if (inputStream == null) {
-                throw new ApiResponseException("stream is null, statusCode: "+statusCode+". ", statusCode);
+                throw new ApiResponseException("stream is null, statusCode: " + statusCode + ". ", statusCode);
             }
 
             scanner = new Scanner(inputStream);
