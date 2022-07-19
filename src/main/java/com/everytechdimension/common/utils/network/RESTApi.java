@@ -87,7 +87,12 @@ public class RESTApi {
             }
             int statusCode = connection.getResponseCode();
             boolean success = 200 <= statusCode && 299 >= statusCode;
-            final InputStream inputStream = success ? connection.getInputStream() : connection.getErrorStream();
+            InputStream inputStream = success ? connection.getInputStream() : connection.getErrorStream();
+
+            if (inputStream == null) {
+                throw new ApiResponseException("stream is null, statusCode: "+statusCode+". ", statusCode);
+            }
+
             scanner = new Scanner(inputStream);
             scanner.useDelimiter("\\A");
             boolean hasInput = scanner.hasNext();
