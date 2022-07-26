@@ -72,21 +72,13 @@ public class RESTApi {
         String response = "";
         try {
             URL url = new URL(uri);
-            connection = (HttpURLConnection) url.openConnection();
+            connection = (HttpsURLConnection) url.openConnection();
             connection.setConnectTimeout(20000);
             connection.setReadTimeout(120000);
 
             if (reqBodyStr != null) {
                 connection.setDoOutput(true);
                 connection.setDoInput(true);
-            }
-            if (connection instanceof HttpsURLConnection) {
-                ((HttpsURLConnection) connection).setHostnameVerifier(new HostnameVerifier() {
-                    @Override
-                    public boolean verify(String arg0, SSLSession arg1) {
-                        return true;
-                    }
-                });
             }
             connection.setRequestMethod(method.name());
             for (Map.Entry<String, String> p : headers.entrySet())
